@@ -6,32 +6,27 @@
 /*   By: bikourar <bikourar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:38:54 by bikourar          #+#    #+#             */
-/*   Updated: 2023/11/20 20:51:54 by bikourar         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:52:29 by bikourar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libprint.h"
+#include "ft_printf.h"
 
-void	ft_putnbr(int n)
+void	ft_putnbr(int n, int *i)
 {
 	long	nb;
 
-	nb = (long)n;
-	if (nb == -2147483648)
-		write (1, "-2147483648", 11);
-	else 
+	nb = n;
+	if (nb < 0)
 	{
-		if (nb < 0)
-		{
-			ft_putchar('-');
-			ft_putnbr((nb * -1));
-		}
-		else if (nb > 9)
-		{
-			ft_putnbr(nb / 10);
-			ft_putnbr(nb % 10);
-		}
-		else
-			ft_putchar((nb + '0'));
+		ft_putchar('-', i);
+		nb = -nb;
+	}
+	if (nb <= 9)
+		ft_putchar((nb + '0'), i);
+	else
+	{
+		ft_putnbr(nb / 10, i);
+		ft_putnbr(nb % 10, i);
 	}
 }

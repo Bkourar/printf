@@ -6,49 +6,66 @@
 /*   By: bikourar <bikourar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:24:04 by bikourar          #+#    #+#             */
-/*   Updated: 2023/11/20 20:51:33 by bikourar         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:50:57 by bikourar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libprint.h"
+#include "ft_printf.h"
+#include <stdio.h>
 
-static int	check_format(const char *forma, va_list arg)
+static void	check_format(char forma, va_list arg, int *loop)
 {
-	int	i;
-
-	i = 0;
-	while (forma[i++]) {
-		if (forma[i] == '%')
-			ft_putchar('%');
-		else if (forma[i] == 'c')
-			ft_putchar(va_arg(arg, int));
-		else if (forma[i] == 's')
-			ft_putstr((const char *)va_arg(arg, char *));
-		else if (forma[i] == 'd')
-			ft_putnbr(va_arg(arg, int));
-		else if (forma[i] == 'x')
-			ft_putnbrbase((long)va_arg(arg, int), 16);
-		else if (forma[i] == 'X')
-			ft_putnbrbase((long)va_arg(arg, int), 16);
-		else
-			ft_putchar(forma[i]);
+	if (forma == '%')
+		ft_putchar('%', loop);
+	else if (forma == 'c')
+		ft_putchar(va_arg(arg, int), loop);
+	else if (forma == 's')
+		ft_putstr(va_arg(arg, char *), loop);
+	else if (forma == 'd' || forma == 'i')
+		ft_putnbr(va_arg(arg, int), loop);
+	else if (forma == 'x' || forma == 'X')
+		ft_puthexa(va_arg(arg, unsigned int), forma, loop);
+	else if (forma == 'u')
+		ft_putunsigned(va_arg(arg, unsigned int), loop);
+	else if (forma == 'p')
+	{
+		ft_putstr("0x", loop);
+		ft_puthexa(va_arg(arg, unsigned long), forma, loop);
 	}
+	else
+		ft_putchar(forma, loop);
 }
 
 int	ft_printf(const char *format, ...)
 {
 	va_list	args;
 	int		i;
+	int		count;
 
 	i = 0;
+	count = 0;
+	if (write(1, "", 0) == -1)
+		return (-1);
 	va_start(args, format);
-	while (format[i]) {
+	while (format[i])
+	{
 		if (format[i] != '%')
-			ft_putchar(format[i]);
-		else if (!(check_format((format + i), args)))
-			return (-1);
+			ft_putchar(format[i], &count);
+		else if (format[i] == '%' && format[i + 1])
+		{
+			i++;
+			check_format(format[i], args, &count);
+		}
+		else if (format[i] == '%' && format[i + 1])
+			break ;
 		i++;
 	}
 	va_end(args);
-	return (0);
+	return (count);
 }
+
+// int main()
+// {
+// 	printf("%d\n",ft_printf("%d\n", -13535355));
+// 	printf("%d\n",printf("%d\n", -13535355));
+// }

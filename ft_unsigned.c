@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_unsigned.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bikourar <bikourar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/20 20:42:03 by bikourar          #+#    #+#             */
-/*   Updated: 2023/11/24 22:16:47 by bikourar         ###   ########.fr       */
+/*   Created: 2023/11/23 17:37:22 by bikourar          #+#    #+#             */
+/*   Updated: 2023/11/24 22:52:59 by bikourar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	ft_putchar(char c, int *p)
+void	ft_putunsigned(unsigned int nb, int *i)
 {
-	write(1, &c, 1);
-	*p += 1;
+	if (nb > 9)
+	{
+		ft_putunsigned((nb / 10), i);
+		ft_putunsigned((nb % 10), i);
+	}
+	else
+		ft_putchar((nb + '0'), i);
 }
